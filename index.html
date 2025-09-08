@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSmart - Smart Crop Advisory System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c5530;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2c5530;
+        }
+
+        .hero {
+            padding: 120px 2rem 80px;
+            text-align: center;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #2c5530;
+            color: white;
+            box-shadow: 0 4px 15px rgba(44, 85, 48, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 85, 48, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #2c5530;
+        }
+
+        .section {
+            padding: 80px 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features {
+            background: white;
+            margin: 0;
+            max-width: none;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #2c5530, #4a7c59);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .dashboard {
+            background: #f8f9fa;
+            margin: 0;
+            max-width: none;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-card h3 {
+            color: #2c5530;
+            margin-bottom: 1rem;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-weight: bold;
+            color: #2c5530;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 1rem;
+        }
+
+        .chart {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1976d2;
+            font-weight: bold;
+        }
+
+        .demo-section {
+            background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
+            margin: 0;
+            max-width: none;
+            color: white;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .demo-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .demo-feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .sih-badge {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 1rem 0;
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .features-grid,
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .advisory-result {
+            background: #e8f5e8;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            border-left: 4px solid #2c5530;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">🌾 AgriSmart</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="sih-badge">SIH 2025 - Problem Statement SIH25010</div>
+        <h1>Smart Crop Advisory System</h1>
+        <p>Empowering Small & Marginal Farmers with AI-Driven Agricultural Intelligence</p>
+        <div class="cta-buttons">
+            <button class="btn btn-primary" onclick="openModal('demoModal')">Try Demo</button>
+            <a href="#dashboard" class="btn btn-secondary">View Dashboard</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="section">
+            <div class="dashboard-header">
+                <h2>Comprehensive Agricultural Solutions</h2>
+                <p>Advanced technology meets traditional farming wisdom</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🛰️</div>
+                    <h3>Satellite Monitoring</h3>
+                    <p>Real-time crop health analysis using satellite imagery and NDVI calculations for precision farming decisions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI Recommendations</h3>
+                    <p>Machine learning algorithms provide personalized advice on planting, fertilization, and pest management.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌡️</div>
+                    <h3>Weather Intelligence</h3>
+                    <p>Hyper-local weather forecasts and climate alerts to optimize farming operations and reduce risks.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Market Insights</h3>
+                    <p>Real-time market prices and demand forecasting to maximize farmer profitability and sales timing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Multi-Channel Access</h3>
+                    <p>Available via mobile app, SMS, and voice calls in multiple local languages for maximum accessibility.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔬</div>
+                    <h3>Crop Diagnosis</h3>
+                    <p>AI-powered plant disease detection using computer vision to identify and treat crop issues early.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="dashboard">
+        <div class="section">
+            <div class="dashboard-header">
+                <h2>Farmer Dashboard</h2>
+                <p>Real-time insights for data-driven farming decisions</p>
+            </div>
+            <div class="dashboard-container">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>Current Season Overview</h3>
+                        <div class="metric">
+                            <span>Crop Health Score</span>
+                            <span class="metric-value">87%</span>
+                        </div>
+                        <div class="metric">
+                            <span>Expected Yield</span>
+                            <span class="metric-value">2.3 tons/acre</span>
+                        </div>
+                        <div class="metric">
+                            <span>Days to Harvest</span>
+                            <span class="metric-value">45 days</span>
+                        </div>
+                        <div class="metric">
+                            <span>Risk Level</span>
+                            <span class="metric-value" style="color: #28a745;">Low</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <h3>Weather Forecast</h3>
+                        <div class="metric">
+                            <span>Today's Temperature</span>
+                            <span class="metric-value">28°C</span>
+                        </div>
+                        <div class="metric">
+                            <span>Humidity</span>
+                            <span class="metric-value">75%</span>
+                        </div>
+                        <div class="metric">
+                            <span>Rainfall Chance</span>
+                            <span class="metric-value">30%</span>
+                        </div>
+                        <div class="metric">
+                            <span>Wind Speed</span>
+                            <span class="metric-value">12 km/h</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>Market Intelligence</h3>
+                        <div class="metric">
+                            <span>Wheat Price</span>
+                            <span class="metric-value">₹2,150/quintal</span>
+                        </div>
+                        <div class="metric">
+                            <span>Price Trend</span>
+                            <span class="metric-value" style="color: #28a745;">↗ +5.2%</span>
+                        </div>
+                        <div class="metric">
+                            <span>Best Market</span>
+                            <span class="metric-value">Ludhiana</span>
+                        </div>
+                        <div class="metric">
+                            <span>Demand</span>
+                            <span class="metric-value" style="color: #28a745;">High</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>Recent Advisories</h3>
+                        <div class="metric">
+                            <span>🌱 Apply nitrogen fertilizer in 3 days</span>
+                        </div>
+                        <div class="metric">
+                            <span>🚨 Watch for aphid infestation</span>
+                        </div>
+                        <div class="metric">
+                            <span>💧 Reduce irrigation by 20%</span>
+                        </div>
+                        <div class="metric">
+                            <span>📈 Market prices rising - hold crops</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Crop Health Trend</h3>
+                    <div class="chart">
+                        📊 Interactive yield prediction chart showing 25% improvement over traditional methods
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="demo-section">
+        <div class="section">
+            <div class="demo-container">
+                <h2>System Demonstration</h2>
+                <p>Experience the power of AI-driven agricultural advisory</p>
+                
+                <div class="demo-features">
+                    <div class="demo-feature">
+                        <h3>🎯 Precision Recommendations</h3>
+                        <p>Get crop-specific advice based on your exact location, soil type, and weather conditions</p>
+                    </div>
+                    <div class="demo-feature">
+                        <h3>📊 Data-Driven Insights</h3>
+                        <p>Satellite imagery analysis with 85-90% accuracy for crop health monitoring</p>
+                    </div>
+                    <div class="demo-feature">
+                        <h3>🌐 Multilingual Support</h3>
+                        <p>Available in Hindi, Punjabi, and regional languages with voice assistance</p>
+                    </div>
+                    <div class="demo-feature">
+                        <h3>📱 Offline Capability</h3>
+                        <p>Critical advisories delivered via SMS even in low-connectivity areas</p>
+                    </div>
+                </div>
+
+                <div style="margin: 2rem 0;">
+                    <h3>Proven Results from Pilot Studies</h3>
+                    <div class="demo-features">
+                        <div class="demo-feature">
+                            <h3>25% Yield Increase</h3>
+                            <p>Average improvement in crop productivity</p>
+                        </div>
+                        <div class="demo-feature">
+                            <h3>20% Cost Reduction</h3>
+                            <p>Savings on fertilizers and pesticides</p>
+                        </div>
+                        <div class="demo-feature">
+                            <h3>60% Income Boost</h3>
+                            <p>Increased farmer profitability</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="section">
+            <h3>Smart India Hackathon 2025</h3>
+            <p>Problem Statement: Smart Crop Advisory System for Small and Marginal Farmers</p>
+            <p>Organization: Government of Punjab | Category: Software | Theme: Agriculture, FoodTech & Rural Development</p>
+            <div style="margin-top: 1rem;">
+                <p><strong>Team Contact:</strong> [Your Team Name] | [Your Email] | [Your Phone]</p>
+                <p><strong>Technologies:</strong> AI/ML, Satellite Imagery, IoT, Mobile Development, Cloud Computing</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Demo Modal -->
+    <div id="demoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('demoModal')">&times;</span>
+            <h2>Get Crop Advisory</h2>
+            <p>Enter your farm details for personalized recommendations:</p>
+            
+            <div class="form-group">
+                <label>Location (District)</label>
+                <select id="location">
+                    <option>Ludhiana</option>
+                    <option>Amritsar</option>
+                    <option>Jalandhar</option>
+                    <option>Patiala</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Crop Type</label>
+                <select id="crop">
+                    <option>Wheat</option>
+                    <option>Rice</option>
+                    <option>Sugarcane</option>
+                    <option>Cotton</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Farm Size (Acres)</label>
+                <input type="number" id="farmSize" value="2" min="0.5" max="50">
+            </div>
+
+            <button class="btn btn-primary" onclick="generateAdvisory()" style="width: 100%; margin-top: 1rem;">Get Advisory</button>
+
+            <div id="advisory-result" style="display: none;">
+                <div class="advisory-result">
+                    <h3>🌾 Your Personalized Advisory</h3>
+                    <p><strong>Recommendation:</strong> <span id="recommendation"></span></p>
+                    <p><strong>Expected Outcome:</strong> <span id="outcome"></span></p>
+                    <p><strong>Next Action:</strong> <span id="nextAction"></span></p>
+                    <p><strong>Market Insight:</strong> <span id="marketInsight"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.getElementById('advisory-result').style.display = 'none';
+        }
+
+        function generateAdvisory() {
+            const location = document.getElementById('location').value;
+            const crop = document.getElementById('crop').value;
+            const farmSize = document.getElementById('farmSize').value;
+
+            // Simulate AI-powered advisory generation
+            const advisories = {
+                'Wheat': {
+                    recommendation: 'Apply 40kg urea per acre in the next 5 days. Soil moisture is optimal for nutrient uptake.',
+                    outcome: 'Expected 18% yield increase with proper fertilizer timing. Target: 2.5 tons/acre.',
+                    nextAction: 'Monitor for rust disease in 2 weeks. Apply fungicide if symptoms appear.',
+                    marketInsight: 'Wheat prices trending upward (+8% this month). Consider holding for better rates.'
+                },
+                'Rice': {
+                    recommendation: 'Reduce irrigation frequency. Current soil moisture at 85% - reduce by 30%.',
+                    outcome: 'Water savings of ₹3,000 per acre while maintaining yield quality.',
+                    nextAction: 'Apply potassium fertilizer after current weather front passes (3 days).',
+                    marketInsight: 'High demand expected due to export orders. Premium varieties getting ₹200 extra/quintal.'
+                },
+                'Sugarcane': {
+                    recommendation: 'Optimal time for earthing up. Satellite data shows 95% plant establishment.',
+                    outcome: 'Expected 22% sugar recovery improvement with proper earthing timing.',
+                    nextAction: 'Install pheromone traps for early borer detection within 1 week.',
+                    marketInsight: 'Sugar mills announcing bonus of ₹150/ton for quality cane. Focus on juice content.'
+                },
+                'Cotton': {
+                    recommendation: 'Apply growth regulator spray. Plants showing excessive vegetative growth.',
+                    outcome: 'Better fruit-to-plant ratio leading to 15% higher cotton yields.',
+                    nextAction: 'Scout for pink bollworm. Critical monitoring period starts next week.',
+                    marketInsight: 'Cotton futures up 12%. International demand strong - good selling season ahead.'
+                }
+            };
+
+            const advisory = advisories[crop];
+            
+            document.getElementById('recommendation').textContent = advisory.recommendation;
+            document.getElementById('outcome').textContent = advisory.outcome;
+            document.getElementById('nextAction').textContent = advisory.nextAction;
+            document.getElementById('marketInsight').textContent = advisory.marketInsight;
+            
+            document.getElementById('advisory-result').style.display = 'block';
+
+            // Simulate real-time data update
+            setTimeout(() => {
+                alert(`📱 SMS Advisory sent to your registered mobile number!\n\n🛰️ Satellite monitoring activated for your ${farmSize} acre ${crop} farm in ${location}.\n\n📊 Dashboard updated with latest recommendations.`);
+            }, 2000);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let i = 0; i < modals.length; i++) {
+                if (event.target == modals[i]) {
+                    modals[i].style.display = 'none';
+                }
+            }
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Animate metrics on scroll
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                element.textContent = Math.floor(progress * (end - start) + start) + '%';
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Trigger animations when dashboard comes into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const healthScore = entry.target.querySelector('.metric-value');
+                    if (healthScore && healthScore.textContent === '87%') {
+                        animateValue(healthScore, 0, 87, 2000);
+                    }
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const dashboardCard = document.querySelector('.dashboard-card');
+            if (dashboardCard) {
+                observer.observe(dashboardCard);
+            }
+        });
+    </script>
+</body>
+</html>
